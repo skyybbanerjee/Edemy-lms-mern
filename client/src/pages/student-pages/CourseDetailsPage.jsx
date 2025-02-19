@@ -5,12 +5,15 @@ import { assets } from "../../assets/assets";
 import humanizeDuration from "humanize-duration";
 import Footer from "../../components/student/Footer";
 import Loading from "../../components/student/Loading";
+import { motion } from "framer-motion";
+
+//todo: 04.38.15 ⏲️
 
 function CourseDetailsPage() {
   const [courseData, setCourseData] = useState(null);
   const [openSections, setOpenSections] = useState({});
   const [isEnrolled, setIsEnrolled] = useState(true);
-  const [playerData, setPlayerData] = useState(null)
+  const [playerData, setPlayerData] = useState(null);
 
   const {
     allCourses,
@@ -38,11 +41,23 @@ function CourseDetailsPage() {
 
   return courseData ? (
     <>
-      <div className="flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between md:px-36 px-8 md:pt-30 pt-20 text-left">
-        <div className="absolute top-0 left-0 w-full h-[500px] -z-1 bg-gradient-to-b from-cyan-100/70"></div>
+      <motion.div
+        className="flex md:flex-row flex-col-reverse gap-10 relative items-start justify-between md:px-36 px-8 md:pt-30 pt-20 text-left"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}>
+        <motion.div
+          className="absolute top-0 left-0 w-full h-[500px] -z-1 bg-gradient-to-b from-cyan-100/70"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}></motion.div>
 
         {/* Left column */}
-        <div className="max-w-xl z-10 text-gray-500">
+        <motion.div
+          className="max-w-xl z-10 text-gray-500"
+          initial={{ x: -30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}>
           <h1 className="md:text-4xl text-2xl font-semibold text-gray-800">
             {courseData.courseTitle}
           </h1>
@@ -164,10 +179,14 @@ function CourseDetailsPage() {
                   .replace(/<li>/g, '<li class="text-gray-600 leading-snug">'),
               }}></div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Right column */}
-        <div className="max-w-[424px] z-10 shadow-2xl rounded-t md:rounded-none overflow-hidden bg-white min-w-[300px] sm:min-w-[420px]">
+        <motion.div
+          className="max-w-[424px] z-10 shadow-2xl rounded-t md:rounded-none overflow-hidden bg-white min-w-[300px] sm:min-w-[420px]"
+          initial={{ x: 30, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}>
           <img src={courseData.courseThumbnail} alt="course-thumbnail" />
           <div className="p-5">
             <div className="flex items-center gap-2">
@@ -228,8 +247,8 @@ function CourseDetailsPage() {
               </ul>
             </div>
           </div>
-        </div>
-      </div>
+        </motion.div>
+      </motion.div>
       <Footer />
     </>
   ) : (

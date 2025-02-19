@@ -6,8 +6,7 @@ import humanizeDuration from "humanize-duration";
 import Footer from "../../components/student/Footer";
 import Loading from "../../components/student/Loading";
 import { motion } from "framer-motion";
-
-//todo: 04.38.15 ⏲️
+import YouTube from "react-youtube";
 
 function CourseDetailsPage() {
   const [courseData, setCourseData] = useState(null);
@@ -33,7 +32,7 @@ function CourseDetailsPage() {
 
   useEffect(() => {
     fetchCourseData();
-  }, []);
+  }, [allCourses]);
 
   function toggleSection(idx) {
     setOpenSections((prev) => ({ ...prev, [idx]: !prev[idx] }));
@@ -140,8 +139,20 @@ function CourseDetailsPage() {
                           <div className="flex items-center justify-between w-full text-gray-800 text-xs md:text-[15px]">
                             <p>{lecture.lectureTitle}</p>
                             <div className="flex gap-2">
-                              {lecture.isPreviewFree && <p>Preview</p>}
-                              <p className="text-blue-500 cursor-pointer">
+                              {lecture.isPreviewFree && (
+                                <p
+                                  className="text-blue-500 cursor-pointer"
+                                  onClick={() =>
+                                    setPlayerData({
+                                      videoId: lecture.lectureUrl
+                                        .split("/")
+                                        .pop(),
+                                    })
+                                  }>
+                                  Preview
+                                </p>
+                              )}
+                              <p>
                                 {humanizeDuration(
                                   lecture.lectureDuration * 60000,
                                   { units: ["h", "m"] }
@@ -187,7 +198,16 @@ function CourseDetailsPage() {
           initial={{ x: 30, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.6 }}>
-          <img src={courseData.courseThumbnail} alt="course-thumbnail" />
+          {playerData ? (
+            <YouTube
+              videoId={playerData.videoId}
+              opts={{ playerVars: { autoplay: 1 } }}
+              iframeClassName="w-full aspect-video"
+            />
+          ) : (
+            <img src={courseData.courseThumbnail} alt="course-thumbnail" />
+          )}
+
           <div className="p-5">
             <div className="flex items-center gap-2">
               <img
@@ -195,6 +215,7 @@ function CourseDetailsPage() {
                 alt="time_left-clock-icon"
                 className="w-3.5"
               />
+
               <p className="text-red-500">
                 <span className="font-medium">5 days</span> left at this price!
               </p>
